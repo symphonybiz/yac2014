@@ -31,7 +31,6 @@ public class PhotoSqliteOpenHelper extends SQLiteOpenHelper {
 
     static {
         final Cupboard cupboard = new CupboardBuilder()
-                .registerFieldConverter(ArrayList.class, new ArrayListSerializableConverter())
                 .registerFieldConverterFactory(new FieldConverterFactory() {
                     @Override
                     public FieldConverter<?> create(Cupboard cupboard, Type type) {
