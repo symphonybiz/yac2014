@@ -17,38 +17,18 @@ import timber.log.Timber;
 
 public class AppEntryActivity extends Activity {
 
-    Api500pxFacade api;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_app_entry);
-
-        Timber.plant(new Timber.DebugTree());
-
-        api = new Api500pxFacade();
-
-        api.popularPhotos()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<PhotosResponse>() {
-                    @Override
-                    public void onCompleted() {
-                        Timber.d("Completed");
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        Timber.e(e, "Failed to load photos.");
-                    }
-
-                    @Override
-                    public void onNext(PhotosResponse photosResponse) {
-                        for (Photo p : photosResponse.photos) {
-                            Timber.d("load: %s", p.name);
-                        }
-                    }
-                });
+        if (savedInstanceState == null) {
+            getFragmentManager()
+                    .beginTransaction()
+                    .add(R.id.content, PhotosFragment.newInstance())
+                    .commit();
+        }
     }
 
 
