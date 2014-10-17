@@ -7,7 +7,8 @@ import com.google.gson.annotations.SerializedName;
  */
 public class User {
 
-    public int id;
+    @SerializedName("id")
+    public int _id;
 
     public String username;
 
@@ -15,5 +16,4 @@ public class User {
 
     @SerializedName("userpic_url")
     public String userpicUrl;
-
 }

@@ -8,7 +8,14 @@ import java.util.List;
  * Created by 7times6 on 17.10.14.
  */
 public class Photo {
-    public int id;
+
+    public boolean liked;
+
+    @SerializedName("id")
+    public int _id;
+
+    @SerializedName("user_id")
+    public int userId;
 
     public String name;
 
@@ -24,4 +31,14 @@ public class Photo {
     public User user;
 
     public List<Image> images;
+
+    @Override
+    public String toString() {
+        return "Photo{" +
+                "id=" + _id +
+                ", name='" + name + '\'' +
+                ", imageUrl='" + imageUrl + '\'' +
+                ", rating=" + rating +
+                '}';
+    }
 }

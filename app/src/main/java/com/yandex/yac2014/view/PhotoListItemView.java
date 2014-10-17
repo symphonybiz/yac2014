@@ -2,6 +2,7 @@ package com.yandex.yac2014.view;
 
 import android.content.Context;
 import android.view.LayoutInflater;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -30,6 +31,9 @@ public class PhotoListItemView extends RelativeLayout {
     @InjectView(R.id.photo_user)
     TextView textUser;
 
+    @InjectView(R.id.liked)
+    CheckBox liked;
+
     public PhotoListItemView(Context context) {
         super(context);
         createView();
@@ -40,6 +44,7 @@ public class PhotoListItemView extends RelativeLayout {
 
         textName.setText(photo.name);
         textUser.setText(photo.user.fullname);
+        liked.setChecked(photo.liked);
 
         final String url = photo.images.get(0).url;
         Glide.with(getContext())

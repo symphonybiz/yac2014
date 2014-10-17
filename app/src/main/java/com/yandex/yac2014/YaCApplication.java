@@ -9,8 +9,11 @@ import timber.log.Timber;
  */
 public class YaCApplication extends Application {
 
+    public static YaCApplication instance;
+
     @Override
     public void onCreate() {
+        instance = this;
         super.onCreate();
         Timber.plant(new Timber.DebugTree());
     }
