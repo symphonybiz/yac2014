@@ -42,8 +42,6 @@ public class PhotoListItemView extends RelativeLayout {
         textUser.setText(photo.user.fullname);
 
         final String url = photo.images.get(0).url;
-        Timber.d("url: %s", url);
-
         Glide.with(getContext())
                 .load(url)
                 .crossFade()

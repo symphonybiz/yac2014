@@ -10,12 +10,14 @@ import android.widget.ListView;
 import com.yandex.yac2014.api.Api500pxFacade;
 import com.yandex.yac2014.api.response.PhotosResponse;
 import com.yandex.yac2014.model.Photo;
+import com.yandex.yac2014.view.LoadOnScrollListener;
 import com.yandex.yac2014.view.PhotoListItemView;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -26,6 +28,9 @@ public class PhotosFragment extends ListFragment {
 
     Api500pxFacade api;
     PhotosAdapter  adapter;
+    Observable<PhotosResponse> lastRequest;
+    int nextPage = 1;
+    int maxPage  = 1;
 
     public static PhotosFragment newInstance() {
         PhotosFragment fragment = new PhotosFragment();
@@ -49,28 +54,69 @@ public class PhotosFragment extends ListFragment {
 
         if (adapter == null) {
             adapter = new PhotosAdapter();
-
-            api.popularPhotos()
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribeOn(Schedulers.io())
-                    .subscribe(new Subscriber<PhotosResponse>() {
-                        @Override
-                        public void onCompleted() {
-                            Timber.d("Completed");
-                        }
-
-                        @Override
-                        public void onError(Throwable e) {
-                            Timber.e(e, "Failed to load photos.");
-                        }
-
-                        @Override
-                        public void onNext(PhotosResponse photosResponse) {
-                            adapter.addPhotos(photosResponse.photos);
-                        }
-                    });
+            lastRequest = api.popularPhotos(nextPage);
+            subscribe();
+        } else if (lastRequest != null) {
+            // if we have request in process
+            subscribe();
         }
         setListAdapter(adapter);
+
+        getListView().setOnScrollListener(new LoadOnScrollListener() {
+
+            boolean barIsVisible = true;
+
+            @Override
+            public void onDataLoadRequest() {
+                if (lastRequest == null && nextPage <= maxPage) {
+                    lastRequest = api.popularPhotos(nextPage);
+                    subscribe();
+                }
+            }
+
+            @Override
+            protected void onScrollUp() {
+                if (!barIsVisible) {
+                    barIsVisible = true;
+                    getActivity().getActionBar().show();
+                }
+            }
+
+            @Override
+            protected void onScrollDown() {
+                if (barIsVisible) {
+                    barIsVisible = false;
+                    getActivity().getActionBar().hide();
+                }
+            }
+        });
+    }
+
+    private void subscribe() {
+        lastRequest.observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Subscriber<PhotosResponse>() {
+                    @Override
+                    public void onCompleted() {
+                        Timber.d("Completed");
+                        lastRequest = null;
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Timber.e(e, "Failed to load photos.");
+                        lastRequest = null;
+                    }
+
+                    @Override
+                    public void onNext(PhotosResponse photosResponse) {
+                        Timber.d("Responded: %s", photosResponse);
+
+                        adapter.addPhotos(photosResponse.photos);
+                        maxPage = photosResponse.totalPages;
+                        ++nextPage;
+                    }
+                });
     }
 
     @Override

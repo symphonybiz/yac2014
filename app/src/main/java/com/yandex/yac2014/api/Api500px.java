@@ -14,7 +14,8 @@ public interface Api500px {
     @GET("/photos?image_size=4")
     Observable<PhotosResponse> photos(
             @Query("consumer_key") String key,
-            @Query("feature")      String feature
+            @Query("feature")      String feature,
+            @Query("page") Integer page
     );
 
 }

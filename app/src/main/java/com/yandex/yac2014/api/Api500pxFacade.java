@@ -3,7 +3,9 @@ package com.yandex.yac2014.api;
 import com.yandex.yac2014.api.response.PhotosResponse;
 
 import retrofit.RestAdapter;
+import rx.Notification;
 import rx.Observable;
+import rx.functions.Action1;
 
 /**
  * Created by 7times6 on 17.10.14.
@@ -20,7 +22,23 @@ public class Api500pxFacade {
     }
 
     public Observable<PhotosResponse> popularPhotos() {
-        return api.photos(Const500px.CONSUMER_KEY, Const500px.FEATURE_POPULAR);
+        return api.photos(Const500px.CONSUMER_KEY, Const500px.FEATURE_POPULAR, null);
+    }
+
+    public Observable<PhotosResponse> popularPhotos(int page) {
+        return api.photos(Const500px.CONSUMER_KEY, Const500px.FEATURE_POPULAR, page).doOnEach(new Action1<Notification<? super PhotosResponse>>() {
+            @Override
+            public void call(Notification<? super PhotosResponse> notification) {
+                // simulate slow network
+                justSleep(1000);
+            }
+        });
+    }
+
+    private void justSleep(long timespan) {
+        try {
+            Thread.sleep(timespan);
+        } catch (InterruptedException ignored) {}
     }
 
 }

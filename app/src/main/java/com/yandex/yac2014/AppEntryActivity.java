@@ -22,6 +22,11 @@ public class AppEntryActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        getActionBar().setHomeButtonEnabled(false);
+        getActionBar().setDisplayHomeAsUpEnabled(false);
+        getActionBar().setDisplayShowHomeEnabled(false);
+        
         setContentView(R.layout.activity_app_entry);
         if (savedInstanceState == null) {
             getFragmentManager()

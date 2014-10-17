@@ -18,6 +18,15 @@ public class PhotosResponse {
     @SerializedName("total_items")
     public int totalItems;
 
-
     public List<Photo> photos;
+
+    @Override
+    public String toString() {
+        return "PhotosResponse{" +
+                "currentPage=" + currentPage +
+                ", totalPages=" + totalPages +
+                ", totalItems=" + totalItems +
+                ", photos=" + photos +
+                '}';
+    }
 }
