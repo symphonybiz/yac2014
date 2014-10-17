@@ -1,10 +1,6 @@
 package com.yandex.yac2014;
 
-import android.app.Activity;
 import android.app.ListFragment;
-import android.content.Context;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,43 +45,33 @@ public class PhotosFragment extends ListFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         getListView().setDividerHeight(0);
 
-        adapter = new PhotosAdapter(getActivity());
+        if (adapter == null) {
+            adapter = new PhotosAdapter();
+
+            api.popularPhotos()
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(Schedulers.io())
+                    .subscribe(new Subscriber<PhotosResponse>() {
+                        @Override
+                        public void onCompleted() {
+                            Timber.d("Completed");
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            Timber.e(e, "Failed to load photos.");
+                        }
+
+                        @Override
+                        public void onNext(PhotosResponse photosResponse) {
+                            adapter.addPhotos(photosResponse.photos);
+                        }
+                    });
+        }
         setListAdapter(adapter);
-
-        api.popularPhotos()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<PhotosResponse>() {
-                    @Override
-                    public void onCompleted() {
-                        Timber.d("Completed");
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        Timber.e(e, "Failed to load photos.");
-                    }
-
-                    @Override
-                    public void onNext(PhotosResponse photosResponse) {
-                        adapter.addPhotos(photosResponse.photos);
-                    }
-                });
     }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-    }
-
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
@@ -93,14 +79,7 @@ public class PhotosFragment extends ListFragment {
     }
 
     private class PhotosAdapter extends BaseAdapter {
-
-        final Context context;
         final List<Photo> photos = new ArrayList<Photo>();
-
-        public PhotosAdapter(Context context) {
-            super();
-            this.context = context;
-        }
 
         @Override
         public int getViewTypeCount() {
@@ -111,7 +90,7 @@ public class PhotosFragment extends ListFragment {
         public View getView(int position, View convertView, ViewGroup parent) {
             PhotoListItemView itemView = null;
             if (convertView == null) {
-                itemView = new PhotoListItemView(context);
+                itemView = new PhotoListItemView(getActivity());
             } else {
                 itemView = (PhotoListItemView) convertView;
             }
