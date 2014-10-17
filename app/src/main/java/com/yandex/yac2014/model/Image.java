@@ -7,6 +7,7 @@ import java.io.Serializable;
  */
 public class Image implements Serializable {
     public Long _id;
+    public int id;
     public int size;
     public String url;
 }

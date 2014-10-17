@@ -12,8 +12,10 @@ public class Photo {
 
     public boolean liked;
 
-    @SerializedName("id")
     public Long _id;
+
+    @SerializedName("id")
+    public int id;
 
     @SerializedName("user_id")
     public int userId;

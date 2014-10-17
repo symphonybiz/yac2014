@@ -21,6 +21,7 @@ import java.util.List;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func2;
 import rx.schedulers.Schedulers;
 import timber.log.Timber;
 
@@ -95,6 +96,19 @@ public class PhotosFragment extends ListFragment {
 
     private void subscribe() {
         lastRequest.observeOn(AndroidSchedulers.mainThread())
+                .zipWith(Storage.get().photos(), new Func2<PhotosResponse, List<Photo>, PhotosResponse>() {
+                    @Override
+                    public PhotosResponse call(PhotosResponse photosResponse, List<Photo> likedPhotos) {
+                        for (Photo likedPhoto : likedPhotos) {
+                            for (Photo photo : photosResponse.photos) {
+                                if (photo.id == likedPhoto.id) {
+                                    photo.liked = true;
+                                }
+                            }
+                        }
+                        return photosResponse;
+                    }
+                })
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<PhotosResponse>() {
                     @Override
