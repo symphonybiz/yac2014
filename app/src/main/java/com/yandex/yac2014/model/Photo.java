@@ -2,6 +2,8 @@ package com.yandex.yac2014.model;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 /**
  * Created by 7times6 on 17.10.14.
  */
@@ -20,4 +22,6 @@ public class Photo {
     public String imageUrl;
 
     public User user;
+
+    public List<Image> images;
 }

@@ -1,6 +1,5 @@
 package com.yandex.yac2014.view;
 
-import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.widget.ImageView;
@@ -13,6 +12,7 @@ import com.yandex.yac2014.model.Photo;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import timber.log.Timber;
 
 /**
  * Created by 7times6 on 17.10.14.
@@ -41,8 +41,11 @@ public class PhotoListItemView extends RelativeLayout {
         textName.setText(photo.name);
         textUser.setText(photo.user.fullname);
 
+        final String url = photo.images.get(0).url;
+        Timber.d("url: %s", url);
+
         Glide.with(getContext())
-                .load(photo.imageUrl)
+                .load(url)
                 .crossFade()
                 .into(image);
     }

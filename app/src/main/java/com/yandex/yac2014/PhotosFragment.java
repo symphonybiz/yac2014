@@ -50,8 +50,7 @@ public class PhotosFragment extends ListFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        getListView().setDivider(new ColorDrawable(Color.BLACK));
-        getListView().setDividerHeight((int) getResources().getDimension(R.dimen.divider));
+        getListView().setDividerHeight(0);
 
         adapter = new PhotosAdapter(getActivity());
         setListAdapter(adapter);
