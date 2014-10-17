@@ -13,7 +13,6 @@ import com.yandex.yac2014.model.Photo;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import timber.log.Timber;
 
 /**
  * Created by 7times6 on 17.10.14.
@@ -40,17 +39,20 @@ public class PhotoListItemView extends RelativeLayout {
     }
 
     public void setPhoto(Photo photo) {
+
+        if (this.photo != photo) {
+            final String url = photo.images.get(0).url;
+            Glide.with(getContext())
+                    .load(url)
+                    .crossFade()
+                    .into(image);
+        }
+
         this.photo = photo;
 
         textName.setText(photo.name);
         textUser.setText(photo.user.fullname);
         liked.setChecked(photo.liked);
-
-        final String url = photo.images.get(0).url;
-        Glide.with(getContext())
-                .load(url)
-                .crossFade()
-                .into(image);
     }
 
     private void createView() {

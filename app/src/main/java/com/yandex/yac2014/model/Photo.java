@@ -2,6 +2,7 @@ package com.yandex.yac2014.model;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -12,7 +13,7 @@ public class Photo {
     public boolean liked;
 
     @SerializedName("id")
-    public int _id;
+    public Long _id;
 
     @SerializedName("user_id")
     public int userId;
@@ -30,7 +31,7 @@ public class Photo {
 
     public User user;
 
-    public List<Image> images;
+    public ArrayList<Image> images;
 
     @Override
     public String toString() {

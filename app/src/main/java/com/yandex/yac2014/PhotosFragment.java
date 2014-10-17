@@ -10,6 +10,7 @@ import android.widget.ListView;
 import com.yandex.yac2014.api.Api500pxFacade;
 import com.yandex.yac2014.api.response.PhotosResponse;
 import com.yandex.yac2014.model.Photo;
+import com.yandex.yac2014.storage.Storage;
 import com.yandex.yac2014.view.LoadOnScrollListener;
 import com.yandex.yac2014.view.PhotoListItemView;
 
@@ -122,6 +123,17 @@ public class PhotosFragment extends ListFragment {
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
+
+        final Photo item = adapter.getItem(position);
+        item.liked = !item.liked;
+        adapter.notifyDataSetChanged();
+
+        final Storage storage = Storage.get();
+        if (item.liked) {
+            storage.savePhoto(item);
+        } else {
+            storage.deletePhoto(item);
+        }
     }
 
     private class PhotosAdapter extends BaseAdapter {
@@ -134,13 +146,15 @@ public class PhotosFragment extends ListFragment {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            PhotoListItemView itemView = null;
+            PhotoListItemView itemView;
             if (convertView == null) {
                 itemView = new PhotoListItemView(getActivity());
             } else {
                 itemView = (PhotoListItemView) convertView;
             }
+
             itemView.setPhoto(getItem(position));
+
             return itemView;
         }
 
