@@ -1,6 +1,5 @@
 package com.yandex.yac2014;
 
-import android.app.ListFragment;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ListView;
@@ -12,7 +11,6 @@ import com.yandex.yac2014.view.PhotosAdapter;
 import java.util.List;
 
 import rx.Observable;
-import rx.Scheduler;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -42,13 +40,15 @@ public class LikedPhotosFragment extends ListFragment {
 
         if (adapter == null) {
             adapter = new PhotosAdapter(this);
+        }
+        setListAdapter(adapter);
+
+        if (lastRequest != null) {
+            subscribe();
+        } else if (adapter.isEmpty()) {
             makeRequest();
             subscribe();
-        } else if (lastRequest != null) {
-            subscribe();
         }
-
-        setListAdapter(adapter);
     }
 
     private void makeRequest() {
@@ -58,17 +58,18 @@ public class LikedPhotosFragment extends ListFragment {
     }
 
     private void subscribe() {
+        setListShown(!adapter.isEmpty());
         subscription = lastRequest.subscribe(new Subscriber<List<Photo>>() {
             @Override
             public void onCompleted() {
                 Timber.d("Completed");
-                lastRequest = null;
+                onRequestCompletion();
             }
 
             @Override
             public void onError(Throwable e) {
                 Timber.e(e, "Failed");
-                lastRequest = null;
+                onRequestCompletion();
             }
 
             @Override
@@ -76,6 +77,11 @@ public class LikedPhotosFragment extends ListFragment {
                 adapter.addPhotos(photos);
             }
         });
+    }
+
+    private void onRequestCompletion() {
+        lastRequest = null;
+        setListShown(true);
     }
 
     @Override

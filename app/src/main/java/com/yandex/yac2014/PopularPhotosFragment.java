@@ -1,9 +1,9 @@
 package com.yandex.yac2014;
 
-import android.app.ListFragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ListView;
 
 import com.yandex.yac2014.api.Api500pxFacade;
@@ -31,7 +31,7 @@ public class PopularPhotosFragment extends ListFragment {
 
     Observable<PhotosResponse> lastRequest;
     Subscription subscription;
-    
+
     int nextPage = 1;
     int maxPage  = 1;
 
@@ -102,10 +102,6 @@ public class PopularPhotosFragment extends ListFragment {
                 }
             }
         });
-
-        View emptyView = LayoutInflater.from(getActivity()).inflate(R.layout.empty_wait, getListView(), false);
-        getListView().getEmptyView();
-        getListView().setEmptyView(emptyView);
     }
 
     private Observable<PhotosResponse> makeRequest() {
