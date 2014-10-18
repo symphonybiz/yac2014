@@ -28,13 +28,13 @@ public class PopularPhotosFragment extends ListFragment {
 
     Api500pxFacade api;
     PhotosAdapter adapter;
+    View footerProgress;
 
     Observable<PhotosResponse> lastRequest;
-    Subscription subscription;
 
+    Subscription subscription;
     int nextPage = 1;
     int maxPage  = 1;
-    private View footerProgress;
 
     public static PopularPhotosFragment newInstance() {
         PopularPhotosFragment fragment = new PopularPhotosFragment();

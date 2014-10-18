@@ -37,6 +37,7 @@ public class LikedPhotosFragment extends ListFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        getListView().setDividerHeight(0);
 
         if (adapter == null) {
             adapter = new PhotosAdapter(this);
