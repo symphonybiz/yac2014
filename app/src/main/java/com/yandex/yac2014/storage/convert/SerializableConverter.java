@@ -7,7 +7,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.ArrayList;
+import java.io.Serializable;
 
 import nl.qbusict.cupboard.convert.EntityConverter;
 import nl.qbusict.cupboard.convert.FieldConverter;
@@ -16,16 +16,16 @@ import timber.log.Timber;
 /**
  * Created by 7times6 on 17.10.14.
  */
-public class ArrayListSerializableConverter implements FieldConverter<ArrayList> {
+public class SerializableConverter<T extends Serializable> implements FieldConverter<T> {
 
     @Override
-    public ArrayList fromCursorValue(Cursor cursor, int columnIndex) {
+    public T fromCursorValue(Cursor cursor, int columnIndex) {
         byte[] binary = cursor.getBlob(columnIndex);
 
         try {
             ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(binary));
-            ArrayList arrayList = (ArrayList) ois.readObject();
-            return arrayList;
+            T res = (T) ois.readObject();
+            return res;
         } catch (Exception e) {
             Timber.e(e, "Cannot read object.");
         }
@@ -34,7 +34,7 @@ public class ArrayListSerializableConverter implements FieldConverter<ArrayList>
     }
 
     @Override
-    public void toContentValue(ArrayList value, String key, ContentValues values) {
+    public void toContentValue(T value, String key, ContentValues values) {
 
         try {
             final ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream(1024);

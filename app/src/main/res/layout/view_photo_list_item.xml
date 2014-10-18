@@ -27,7 +27,7 @@
             android:id="@+id/photo_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fontFamily="sans-serif-light"
+            android:fontFamily="@string/font_light"
             android:textColor="@android:color/white"
             android:textSize="20dp"
             tools:text="Photo name and rating 99.5" />
@@ -36,7 +36,7 @@
             android:id="@+id/photo_user"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fontFamily="sans-serif-light"
+            android:fontFamily="@string/font_light"
             android:textColor="@android:color/white"
             android:textSize="16dp"
             android:textStyle="italic"
@@ -49,14 +49,14 @@
         android:background="@drawable/gradint_black_transparent_top_to_back" />
 
     <CheckBox
-        android:alpha="0.5"
         android:id="@+id/liked"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginRight="16dp"
+        android:layout_alignParentRight="true"
         android:layout_marginBottom="8dp"
+        android:layout_marginRight="16dp"
+        android:alpha="0.5"
         android:button="@drawable/favorite_checkbox"
         android:enabled="false"
         android:focusable="false" />

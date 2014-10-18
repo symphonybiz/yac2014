@@ -6,4 +6,6 @@
     <string name="action_liked">Liked Photos</string>
     <string name="title_activity_liked_photos">LikedPhotosActivity</string>
 
+    <string name="font_regular">sans-serif</string>
+    <string name="font_light">sans-serif-light</string>
 </resources>

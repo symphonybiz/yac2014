@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import com.yandex.yac2014.model.Image;
 import com.yandex.yac2014.model.Photo;
 import com.yandex.yac2014.model.User;
-import com.yandex.yac2014.storage.convert.ArrayListSerializableConverter;
+import com.yandex.yac2014.storage.convert.SerializableConverter;
 
 import java.lang.reflect.Type;
 
@@ -26,15 +26,16 @@ public class PhotoSqliteOpenHelper extends SQLiteOpenHelper {
 
 
     private final static String DB_FILE = "data.db";
-    private final static int DB_VERSION = 6;
+    private final static int DB_VERSION = 7;
 
     static {
         final Cupboard cupboard = new CupboardBuilder()
+                .registerFieldConverter(User.class, new SerializableConverter<User>())
                 .registerFieldConverterFactory(new FieldConverterFactory() {
                     @Override
                     public FieldConverter<?> create(Cupboard cupboard, Type type) {
                         if (type.toString().contains("java.util.ArrayList")) {
-                            return new ArrayListSerializableConverter();
+                            return new SerializableConverter();
                         }
                         return null;
                     }
@@ -43,8 +44,8 @@ public class PhotoSqliteOpenHelper extends SQLiteOpenHelper {
         setCupboard(cupboard);
 
         cupboard().register(Photo.class);
-        cupboard().register(User.class);
-        cupboard().register(Image.class);
+//        cupboard().register(User.class);
+//        cupboard().register(Image.class);
     }
 
     public PhotoSqliteOpenHelper(Context context) {
