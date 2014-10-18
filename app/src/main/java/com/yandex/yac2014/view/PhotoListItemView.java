@@ -51,7 +51,11 @@ public class PhotoListItemView extends RelativeLayout {
         this.photo = photo;
 
         textName.setText(photo.name);
-        textUser.setText(photo.user.fullname);
+
+        if (photo.user != null) {
+            textUser.setText(photo.user.fullname);
+        }
+
         liked.setChecked(photo.liked);
     }
 

@@ -26,19 +26,6 @@ public class Api500pxFacade {
     }
 
     public Observable<PhotosResponse> popularPhotos(int page) {
-        return api.photos(Const500px.CONSUMER_KEY, Const500px.FEATURE_POPULAR, page).doOnEach(new Action1<Notification<? super PhotosResponse>>() {
-            @Override
-            public void call(Notification<? super PhotosResponse> notification) {
-                // simulate slow network
-                justSleep(1000);
-            }
-        });
+        return api.photos(Const500px.CONSUMER_KEY, Const500px.FEATURE_POPULAR, page);
     }
-
-    private void justSleep(long timespan) {
-        try {
-            Thread.sleep(timespan);
-        } catch (InterruptedException ignored) {}
-    }
-
 }

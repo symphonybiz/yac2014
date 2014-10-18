@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Yac2014</string>
+    <string name="app_name">YaC2014</string>
     <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
+    <string name="action_liked">Liked Photos</string>
+    <string name="title_activity_liked_photos">LikedPhotosActivity</string>
 
 </resources>

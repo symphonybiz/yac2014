@@ -7,8 +7,12 @@
 
     <style name="Semitransparent" parent="android:Widget.Holo.ActionBar">
         <item name="android:background">#82000000</item>
-        <item name="android:displayOptions">showHome|homeAsUp|showTitle</item>
-        <item name="android:icon">@android:color/transparent</item>
+        <item name="android:icon">@drawable/ic_camera_roll_white_36dp</item>
+        <item name="android:homeAsUpIndicator">@android:color/transparent</item>
+        <item name="android:displayOptions">showHome|showTitle</item>
+    </style>
+
+    <style name="AppTheme.NoActionBar" parent="android:Theme.Holo.NoActionBar">
     </style>
 
 </resources>

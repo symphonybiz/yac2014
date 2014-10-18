@@ -10,7 +10,6 @@ import com.yandex.yac2014.model.User;
 import com.yandex.yac2014.storage.convert.ArrayListSerializableConverter;
 
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 
 import nl.qbusict.cupboard.Cupboard;
 import nl.qbusict.cupboard.CupboardBuilder;

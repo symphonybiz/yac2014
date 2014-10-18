@@ -15,18 +15,13 @@ import rx.schedulers.Schedulers;
 import timber.log.Timber;
 
 
-public class AppEntryActivity extends Activity {
+public class AppEntryPhotosActivity extends Activity {
 
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        getActionBar().setHomeButtonEnabled(false);
-        getActionBar().setDisplayHomeAsUpEnabled(false);
-        getActionBar().setDisplayShowHomeEnabled(false);
-        
         setContentView(R.layout.activity_app_entry);
         if (savedInstanceState == null) {
             getFragmentManager()
@@ -39,18 +34,15 @@ public class AppEntryActivity extends Activity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.app_entry, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_liked) {
+            LikedPhotosActivity.start(this);
             return true;
         }
         return super.onOptionsItemSelected(item);
