@@ -3,6 +3,7 @@ package com.yandex.yac2014;
 import android.app.ListFragment;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ListView;
 
 import com.yandex.yac2014.model.Photo;
 import com.yandex.yac2014.storage.Storage;
@@ -75,6 +76,21 @@ public class LikedPhotosFragment extends ListFragment {
                 adapter.addPhotos(photos);
             }
         });
+    }
+
+    @Override
+    public void onListItemClick(ListView l, View v, int position, long id) {
+        super.onListItemClick(l, v, position, id);
+
+        final Photo photo = adapter.getItem(position);
+
+        if (photo.liked) {
+            Storage.get().deletePhoto(photo);
+        } else {
+            Storage.get().savePhoto(photo);
+        }
+        photo.liked = !photo.liked;
+        adapter.notifyDataSetChanged();
     }
 
     @Override
