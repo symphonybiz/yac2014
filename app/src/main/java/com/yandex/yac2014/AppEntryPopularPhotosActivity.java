@@ -5,17 +5,8 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.yandex.yac2014.api.Api500pxFacade;
-import com.yandex.yac2014.api.response.PhotosResponse;
-import com.yandex.yac2014.model.Photo;
 
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
-import timber.log.Timber;
-
-
-public class AppEntryPhotosActivity extends Activity {
+public class AppEntryPopularPhotosActivity extends Activity {
 
 
 
@@ -26,7 +17,7 @@ public class AppEntryPhotosActivity extends Activity {
         if (savedInstanceState == null) {
             getFragmentManager()
                     .beginTransaction()
-                    .add(R.id.content, PhotosFragment.newInstance())
+                    .add(R.id.content, PopularPhotosFragment.newInstance())
                     .commit();
         }
     }

@@ -41,6 +41,7 @@ public class PhotoListItemView extends RelativeLayout {
     public void setPhoto(Photo photo) {
 
         if (this.photo != photo) {
+            // if not requested photo yet
             final String url = photo.images.get(0).url;
             Glide.with(getContext())
                     .load(url)
@@ -51,11 +52,7 @@ public class PhotoListItemView extends RelativeLayout {
         this.photo = photo;
 
         textName.setText(photo.name);
-
-        if (photo.user != null) {
-            textUser.setText(photo.user.fullname);
-        }
-
+        textUser.setText(photo.user.fullname);
         liked.setChecked(photo.liked);
     }
 

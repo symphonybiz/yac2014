@@ -2,6 +2,7 @@ package com.yandex.yac2014;
 
 import android.app.ListFragment;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ListView;
 
@@ -23,7 +24,7 @@ import rx.schedulers.Schedulers;
 import timber.log.Timber;
 
 
-public class PhotosFragment extends ListFragment {
+public class PopularPhotosFragment extends ListFragment {
 
     Api500pxFacade api;
     PhotosAdapter adapter;
@@ -34,12 +35,12 @@ public class PhotosFragment extends ListFragment {
     int nextPage = 1;
     int maxPage  = 1;
 
-    public static PhotosFragment newInstance() {
-        PhotosFragment fragment = new PhotosFragment();
+    public static PopularPhotosFragment newInstance() {
+        PopularPhotosFragment fragment = new PopularPhotosFragment();
         return fragment;
     }
 
-    public PhotosFragment() {
+    public PopularPhotosFragment() {
         setRetainInstance(true);
     }
 
@@ -52,18 +53,27 @@ public class PhotosFragment extends ListFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        getListView().setDividerHeight(0);
+
 
         if (adapter == null) {
+            // first start
             adapter = new PhotosAdapter(this);
-            lastRequest = api.popularPhotos(nextPage);
-            subscribe();
-        } else if (lastRequest != null) {
-            // if we have request in process
-            subscribe();
         }
         setListAdapter(adapter);
+        setUpList();
 
+        if (lastRequest != null) {
+            // request in process
+            subscribe();
+        } else if (adapter.isEmpty()) {
+            // last time didn't load anything
+            lastRequest = makeRequest();
+            subscribe();
+        }
+    }
+
+    private void setUpList() {
+        getListView().setDividerHeight(0);
         getListView().setOnScrollListener(new LoadOnScrollListener() {
 
             boolean barIsVisible = true;
@@ -71,7 +81,7 @@ public class PhotosFragment extends ListFragment {
             @Override
             public void onDataLoadRequest() {
                 if (lastRequest == null && nextPage <= maxPage) {
-                    lastRequest = api.popularPhotos(nextPage);
+                    lastRequest = makeRequest();
                     subscribe();
                 }
             }
@@ -92,10 +102,14 @@ public class PhotosFragment extends ListFragment {
                 }
             }
         });
+
+        View emptyView = LayoutInflater.from(getActivity()).inflate(R.layout.empty_wait, getListView(), false);
+        getListView().getEmptyView();
+        getListView().setEmptyView(emptyView);
     }
 
-    private void subscribe() {
-        subscription = lastRequest.observeOn(AndroidSchedulers.mainThread())
+    private Observable<PhotosResponse> makeRequest() {
+        return api.popularPhotos(nextPage)
                 .zipWith(Storage.get().photos(), new Func2<PhotosResponse, List<Photo>, PhotosResponse>() {
                     @Override
                     public PhotosResponse call(PhotosResponse photosResponse, List<Photo> likedPhotos) {
@@ -110,29 +124,40 @@ public class PhotosFragment extends ListFragment {
                         return photosResponse;
                     }
                 })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io());
+    }
+
+    private void subscribe() {
+        setListShown(!adapter.isEmpty());
+        subscription = lastRequest
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<PhotosResponse>() {
                     @Override
                     public void onCompleted() {
                         Timber.d("Completed");
-                        lastRequest = null;
+                        onRequestCompletion();
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         Timber.e(e, "Failed to load photos.");
-                        lastRequest = null;
+                        onRequestCompletion();
                     }
 
                     @Override
                     public void onNext(PhotosResponse photosResponse) {
                         Timber.d("Responded: %s", photosResponse);
-
                         adapter.addPhotos(photosResponse.photos);
                         maxPage = photosResponse.totalPages;
                         ++nextPage;
                     }
                 });
+    }
+
+    private void onRequestCompletion() {
+        lastRequest = null;
+        setListShown(true);
     }
 
     @Override
