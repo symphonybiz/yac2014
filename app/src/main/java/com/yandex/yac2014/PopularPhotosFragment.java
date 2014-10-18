@@ -34,6 +34,7 @@ public class PopularPhotosFragment extends ListFragment {
 
     int nextPage = 1;
     int maxPage  = 1;
+    private View footerProgress;
 
     public static PopularPhotosFragment newInstance() {
         PopularPhotosFragment fragment = new PopularPhotosFragment();
@@ -102,6 +103,9 @@ public class PopularPhotosFragment extends ListFragment {
                 }
             }
         });
+
+        footerProgress = LayoutInflater.from(getActivity()).inflate(R.layout.bottom_progress, null);
+        getListView().addFooterView(footerProgress);
     }
 
     private Observable<PhotosResponse> makeRequest() {
@@ -125,7 +129,7 @@ public class PopularPhotosFragment extends ListFragment {
     }
 
     private void subscribe() {
-        setListShown(!adapter.isEmpty());
+        onSubscribing();
         subscription = lastRequest
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<PhotosResponse>() {
@@ -151,9 +155,20 @@ public class PopularPhotosFragment extends ListFragment {
                 });
     }
 
+    private void onSubscribing() {
+        if (adapter.isEmpty()) {
+            setListShown(false);
+            footerProgress.setVisibility(View.GONE);
+        } else {
+            setListShown(true);
+            footerProgress.setVisibility(View.VISIBLE);
+        }
+    }
+
     private void onRequestCompletion() {
         lastRequest = null;
         setListShown(true);
+        footerProgress.setVisibility(View.GONE);
     }
 
     @Override

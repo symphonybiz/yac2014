@@ -9,7 +9,7 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
+        android:layout_marginLeft="6dp"
         android:layout_marginRight="8dp"
         android:src="@drawable/ic_camera_roll_white_36dp" />
 
