@@ -4,12 +4,12 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.yandex.yac2014.model.Image;
 import com.yandex.yac2014.model.Photo;
 import com.yandex.yac2014.model.User;
 import com.yandex.yac2014.storage.convert.GsonConverter;
-import com.yandex.yac2014.storage.convert.SerializableConverter;
+import com.yandex.yac2014.storage.convert.GsonGenericConverter;
 
+import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
 import nl.qbusict.cupboard.Cupboard;
@@ -27,7 +27,7 @@ public class PhotoSqliteOpenHelper extends SQLiteOpenHelper {
 
 
     private final static String DB_FILE = "data.db";
-    private final static int DB_VERSION = 9;
+    private final static int DB_VERSION = 11;
 
     static {
         final Cupboard cupboard = new CupboardBuilder()
@@ -35,9 +35,12 @@ public class PhotoSqliteOpenHelper extends SQLiteOpenHelper {
                 .registerFieldConverterFactory(new FieldConverterFactory() {
                     @Override
                     public FieldConverter<?> create(Cupboard cupboard, Type type) {
-                        if (type.toString().contains("java.util.ArrayList")) {
-                            return new SerializableConverter();
+
+                        if (type instanceof ParameterizedType) {
+                            final ParameterizedType parameterizedType = ParameterizedType.class.cast(type);
+                            return new GsonGenericConverter(parameterizedType);
                         }
+
                         return null;
                     }
                 })
@@ -45,8 +48,6 @@ public class PhotoSqliteOpenHelper extends SQLiteOpenHelper {
         setCupboard(cupboard);
 
         cupboard().register(Photo.class);
-//        cupboard().register(User.class);
-//        cupboard().register(Image.class);
     }
 
     public PhotoSqliteOpenHelper(Context context) {

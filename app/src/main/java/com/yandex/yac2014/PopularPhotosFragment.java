@@ -115,7 +115,7 @@ public class PopularPhotosFragment extends ListFragment {
                     public PhotosResponse call(PhotosResponse photosResponse, List<Photo> likedPhotos) {
                         for (Photo likedPhoto : likedPhotos) {
                             for (Photo photo : photosResponse.photos) {
-                                if (photo.id == likedPhoto.id) {
+                                if (photo.serverId == likedPhoto.serverId) {
                                     photo.liked = true;
                                     photo._id = likedPhoto._id;
                                 }

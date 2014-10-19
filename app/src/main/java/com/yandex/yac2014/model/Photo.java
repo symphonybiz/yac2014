@@ -10,29 +10,25 @@ import java.util.List;
  */
 public class Photo {
 
+    @SerializedName("liked")
     public boolean liked;
 
+    @SerializedName("_id")
     public Long _id;
 
     @SerializedName("id")
-    public int id;
+    public int serverId;
 
-    @SerializedName("user_id")
-    public int userId;
-
+    @SerializedName("name")
     public String name;
 
+    @SerializedName("rating")
     public float rating;
 
-    public int width;
-
-    public int height;
-
-    @SerializedName("image_url")
-    public String imageUrl;
-
+    @SerializedName("user")
     public User user;
 
+    @SerializedName("images")
     public ArrayList<Image> images;
 
     @Override
@@ -40,7 +36,6 @@ public class Photo {
         return "Photo{" +
                 "id=" + _id +
                 ", name='" + name + '\'' +
-                ", imageUrl='" + imageUrl + '\'' +
                 ", rating=" + rating +
                 '}';
     }

@@ -15,7 +15,10 @@ import timber.log.Timber;
 
 /**
  * Created by 7times6 on 17.10.14.
+ * <br>
+ * Do not use it. Consider {@link com.yandex.yac2014.storage.convert.GsonConverter}
  */
+@Deprecated
 public class SerializableConverter<T extends Serializable> implements FieldConverter<T> {
 
     @Override

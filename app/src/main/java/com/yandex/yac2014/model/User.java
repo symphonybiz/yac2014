@@ -9,14 +9,10 @@ import java.io.Serializable;
  */
 public class User implements Serializable {
 
-    public Long _id;
+    @SerializedName("id")
+    public int serverId;
 
-    public int id;
-
-    public String username;
-
+    @SerializedName("fullname")
     public String fullname;
 
-    @SerializedName("userpic_url")
-    public String userpicUrl;
 }
