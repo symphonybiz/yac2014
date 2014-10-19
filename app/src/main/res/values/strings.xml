@@ -9,4 +9,5 @@
     <string name="font_regular">sans-serif</string>
     <string name="font_light">sans-serif-light</string>
     <string name="wait">Wait…</string>
+    <string name="empty">Empty</string>
 </resources>
