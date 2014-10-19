@@ -27,7 +27,7 @@
             android:drawSelectorOnTop="false" />
 
         <TextView
-            android:id="@android:id/empty"
+            android:id="@+id/empty_text"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fontFamily="@string/font_light"

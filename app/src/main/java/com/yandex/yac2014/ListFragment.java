@@ -388,8 +388,7 @@ public class ListFragment extends Fragment {
         if (root instanceof ListView) {
             mList = (ListView)root;
         } else {
-            mStandardEmptyView = (TextView)root.findViewById(
-                    R.id.empty_text);
+            mStandardEmptyView = (TextView)root.findViewById(R.id.empty_text);
             if (mStandardEmptyView == null) {
                 mEmptyView = root.findViewById(android.R.id.empty);
             } else {
