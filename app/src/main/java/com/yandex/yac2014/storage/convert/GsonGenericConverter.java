@@ -4,6 +4,9 @@ import android.content.ContentValues;
 import android.database.Cursor;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
 
 import nl.qbusict.cupboard.convert.EntityConverter;
 import nl.qbusict.cupboard.convert.FieldConverter;
@@ -13,10 +16,10 @@ import nl.qbusict.cupboard.convert.FieldConverter;
  */
 public class GsonGenericConverter<T> implements FieldConverter<T> {
 
-    final Class<T> clazz;
+    final Type type;
 
-    public GsonGenericConverter(Class<T> clazz) {
-        this.clazz = clazz;
+    public GsonGenericConverter(Type type) {
+        this.type = type;
     }
 
     @Override
@@ -24,7 +27,7 @@ public class GsonGenericConverter<T> implements FieldConverter<T> {
 
         String jsonString = cursor.getString(columnIndex);
         Gson gson = new Gson();
-        T result = gson.fromJson(jsonString, clazz);
+        T result = gson.fromJson(jsonString, type);
 
         return result;
     }
@@ -32,7 +35,7 @@ public class GsonGenericConverter<T> implements FieldConverter<T> {
     @Override
     public void toContentValue(T value, String key, ContentValues values) {
         Gson gson = new Gson();
-        final String jsonString = gson.toJson(value, clazz);
+        final String jsonString = gson.toJson(value, type);
         values.put(key, jsonString);
     }
 

@@ -3,7 +3,6 @@ package com.yandex.yac2014;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ListView;
 
 import com.yandex.yac2014.api.Api500pxFacade;
@@ -19,6 +18,8 @@ import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.functions.Func1;
 import rx.functions.Func2;
 import rx.schedulers.Schedulers;
 import timber.log.Timber;
@@ -194,5 +195,40 @@ public class PopularPhotosFragment extends ListFragment {
             subscription.unsubscribe();
             subscription = null;
         }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        // update photos status after modification from different context
+        if (!adapter.isEmpty()) {
+            Storage.get().photos()
+                .map(new Func1<List<Photo>, Boolean>() {
+                    @Override
+                    public Boolean call(List<Photo> photos) {
+                        for (int i = 0; adapter != null && i < adapter.getCount(); ++i) {
+                            final Photo adapterItem = adapter.getItem(i);
+                            adapterItem.liked = false;
+                            for (Photo dbItem : photos) {
+                                if (dbItem.serverId == adapterItem.serverId) {
+                                    adapterItem.liked = true;
+                                    break;
+                                }
+                            }
+                        }
+                        return true;
+                    }
+                })
+                .subscribeOn(Schedulers.computation())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<Boolean>() {
+                    @Override
+                    public void call(Boolean modified) {
+                        if (adapter != null && modified) {
+                            adapter.notifyDataSetChanged();
+                        }
+                    }
+                });
+       }
     }
 }
