@@ -24,30 +24,28 @@ import timber.log.Timber;
 public class GsonConverter<T> implements FieldConverter<T> {
 
     final Class<T> clazz;
+    final Gson gson;
 
     public GsonConverter(Class<T> clazz) {
         this.clazz = clazz;
-    }
-
-    @Override
-    public T fromCursorValue(Cursor cursor, int columnIndex) {
-
-        String jsonString = cursor.getString(columnIndex);
-        Gson gson = new Gson();
-        T result = gson.fromJson(jsonString, clazz);
-
-        return result;
-    }
-
-    @Override
-    public void toContentValue(T value, String key, ContentValues values) {
-        Gson gson = new Gson();
-        final String jsonString = gson.toJson(value, clazz);
-        values.put(key, jsonString);
+        this.gson  = new Gson();
     }
 
     @Override
     public EntityConverter.ColumnType getColumnType() {
         return EntityConverter.ColumnType.TEXT;
+    }
+
+    @Override
+    public T fromCursorValue(Cursor cursor, int columnIndex) {
+        String jsonString = cursor.getString(columnIndex);
+        T result = gson.fromJson(jsonString, clazz);
+        return result;
+    }
+
+    @Override
+    public void toContentValue(T value, String key, ContentValues values) {
+        final String jsonString = gson.toJson(value, clazz);
+        values.put(key, jsonString);
     }
 }
