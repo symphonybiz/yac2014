@@ -41,7 +41,7 @@ public class PhotoListItemView extends RelativeLayout {
     public void setPhoto(Photo photo) {
 
         if (this.photo != photo) {
-            // if not requested photo yet
+            // not already loaded
             final String url = photo.images.get(0).url;
             Glide.with(getContext())
                     .load(url)
