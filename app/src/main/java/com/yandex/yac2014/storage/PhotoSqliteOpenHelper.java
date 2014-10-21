@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import com.yandex.yac2014.model.Photo;
 import com.yandex.yac2014.model.User;
-import com.yandex.yac2014.storage.convert.GsonConverter;
+import com.yandex.yac2014.storage.convert.JsonConverter;
 import com.yandex.yac2014.storage.convert.GsonGenericConverter;
 
 import java.lang.reflect.ParameterizedType;
@@ -31,7 +31,7 @@ public class PhotoSqliteOpenHelper extends SQLiteOpenHelper {
 
     static {
         final Cupboard cupboard = new CupboardBuilder()
-                .registerFieldConverter(User.class, new GsonConverter<User>(User.class))
+                .registerFieldConverter(User.class, new JsonConverter<User>(User.class))
                 .registerFieldConverterFactory(new FieldConverterFactory() {
                     @Override
                     public FieldConverter<?> create(Cupboard cupboard, Type type) {

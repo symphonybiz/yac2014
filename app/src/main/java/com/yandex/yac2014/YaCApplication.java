@@ -2,6 +2,14 @@ package com.yandex.yac2014;
 
 import android.app.Application;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.integration.okhttp.OkHttpUrlLoader;
+import com.bumptech.glide.load.model.GlideUrl;
+import com.squareup.okhttp.OkHttpClient;
+
+import java.io.InputStream;
+import java.util.concurrent.TimeUnit;
+
 import timber.log.Timber;
 
 /**
@@ -16,5 +24,13 @@ public class YaCApplication extends Application {
         super.onCreate();
         instance = this;
         Timber.plant(new Timber.DebugTree());
+
+        final OkHttpClient okHttpClient = new OkHttpClient();
+        okHttpClient.setConnectTimeout(30, TimeUnit.SECONDS);
+        okHttpClient.setReadTimeout(30, TimeUnit.SECONDS);
+        Glide.get(this)
+                .register(GlideUrl.class,
+                          InputStream.class,
+                          new OkHttpUrlLoader.Factory(okHttpClient));
     }
 }

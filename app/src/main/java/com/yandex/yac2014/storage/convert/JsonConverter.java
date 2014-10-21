@@ -21,12 +21,12 @@ import timber.log.Timber;
 /**
  * Created by 7times6 on 17.10.14.
  */
-public class GsonConverter<T> implements FieldConverter<T> {
+public class JsonConverter<T> implements FieldConverter<T> {
 
     final Class<T> clazz;
     final Gson gson;
 
-    public GsonConverter(Class<T> clazz) {
+    public JsonConverter(Class<T> clazz) {
         this.clazz = clazz;
         this.gson  = new Gson();
     }

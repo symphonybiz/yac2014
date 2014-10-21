@@ -90,6 +90,7 @@
     <orderEntry type="library" exported="" name="cupboard-2.0.1" level="project" />
     <orderEntry type="library" exported="" name="support-annotations-20.0.0" level="project" />
     <orderEntry type="library" exported="" name="rxjava-core-0.20.5" level="project" />
+    <orderEntry type="library" exported="" name="okhttp-integration-1.0.1" level="project" />
     <orderEntry type="library" exported="" name="gson-2.3" level="project" />
     <orderEntry type="library" exported="" name="rxjava-android-0.20.5" level="project" />
     <orderEntry type="library" exported="" name="butterknife-5.1.2" level="project" />
