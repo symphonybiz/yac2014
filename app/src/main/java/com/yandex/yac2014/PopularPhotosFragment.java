@@ -89,7 +89,7 @@ public class PopularPhotosFragment extends ListFragment {
             }
 
             @Override
-            protected void onScrollUp() {
+            public void onScrollUp() {
                 if (!barIsVisible) {
                     barIsVisible = true;
                     getActivity().getActionBar().show();
@@ -97,7 +97,7 @@ public class PopularPhotosFragment extends ListFragment {
             }
 
             @Override
-            protected void onScrollDown() {
+            public void onScrollDown() {
                 if (barIsVisible) {
                     barIsVisible = false;
                     getActivity().getActionBar().hide();

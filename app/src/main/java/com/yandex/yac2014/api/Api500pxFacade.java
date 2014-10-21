@@ -26,16 +26,6 @@ public class Api500pxFacade {
     }
 
     public Observable<PhotosResponse> popularPhotos(int page) {
-        return api.photos(Const500px.CONSUMER_KEY, Const500px.FEATURE_POPULAR, page)
-                .doOnEach(new Action1<Notification<? super PhotosResponse>>() {
-                    @Override
-                    public void call(Notification<? super PhotosResponse> notification) {
-                        try {
-                            Thread.sleep(1000);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
+        return api.photos(Const500px.CONSUMER_KEY, Const500px.FEATURE_POPULAR, page);
     }
 }

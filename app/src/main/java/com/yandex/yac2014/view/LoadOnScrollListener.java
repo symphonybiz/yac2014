@@ -38,8 +38,8 @@ public abstract class LoadOnScrollListener implements AbsListView.OnScrollListen
 
     public abstract void onDataLoadRequest();
 
-    protected abstract void onScrollUp();
+    public abstract void onScrollUp();
 
-    protected abstract void onScrollDown();
+    public abstract void onScrollDown();
 
 }

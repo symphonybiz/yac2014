@@ -14,11 +14,11 @@ import nl.qbusict.cupboard.convert.FieldConverter;
 /**
  * Created by 7times6 on 17.10.14.
  */
-public class GsonGenericConverter<T> implements FieldConverter<T> {
+public class JsonParametrizedTypeConverter<T> implements FieldConverter<T> {
 
     final Type type;
 
-    public GsonGenericConverter(Type type) {
+    public JsonParametrizedTypeConverter(Type type) {
         this.type = type;
     }
 
