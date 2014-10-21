@@ -11,7 +11,6 @@ public class LikedPhotosActivity extends Activity {
 
     public static void start(Activity caller) {
         Intent i = new Intent(caller, LikedPhotosActivity.class);
-//        caller.overridePendingTransition(); TODO
         caller.startActivity(i);
     }
 

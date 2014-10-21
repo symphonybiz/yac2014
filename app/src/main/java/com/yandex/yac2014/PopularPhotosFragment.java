@@ -61,6 +61,7 @@ public class PopularPhotosFragment extends ListFragment {
             // first start
             adapter = new PhotosAdapter(this);
         }
+
         setListAdapter(adapter);
         setUpList();
 
@@ -76,34 +77,7 @@ public class PopularPhotosFragment extends ListFragment {
 
     private void setUpList() {
         getListView().setDividerHeight(0);
-        getListView().setOnScrollListener(new LoadOnScrollListener() {
-
-            boolean barIsVisible = true;
-
-            @Override
-            public void onDataLoadRequest() {
-                if (lastRequest == null && nextPage <= maxPage) {
-                    lastRequest = makeRequest();
-                    subscribe();
-                }
-            }
-
-            @Override
-            public void onScrollUp() {
-                if (!barIsVisible) {
-                    barIsVisible = true;
-                    getActivity().getActionBar().show();
-                }
-            }
-
-            @Override
-            public void onScrollDown() {
-                if (barIsVisible) {
-                    barIsVisible = false;
-                    getActivity().getActionBar().hide();
-                }
-            }
-        });
+        getListView().setOnScrollListener(new ActionBarHidingScrollListener());
 
         footerProgress = LayoutInflater.from(getActivity()).inflate(R.layout.bottom_progress, null);
         getListView().addFooterView(footerProgress);
@@ -114,14 +88,7 @@ public class PopularPhotosFragment extends ListFragment {
                 .zipWith(Storage.get().photos(), new Func2<PhotosResponse, List<Photo>, PhotosResponse>() {
                     @Override
                     public PhotosResponse call(PhotosResponse photosResponse, List<Photo> likedPhotos) {
-                        for (Photo likedPhoto : likedPhotos) {
-                            for (Photo photo : photosResponse.photos) {
-                                if (photo.serverId == likedPhoto.serverId) {
-                                    photo.liked = true;
-                                    photo._id = likedPhoto._id;
-                                }
-                            }
-                        }
+                        mergeRemoteAndLocal(photosResponse, likedPhotos);
                         return photosResponse;
                     }
                 })
@@ -129,31 +96,22 @@ public class PopularPhotosFragment extends ListFragment {
                 .subscribeOn(Schedulers.io());
     }
 
+    private void mergeRemoteAndLocal(PhotosResponse photosResponse, List<Photo> likedPhotos) {
+        for (Photo likedPhoto : likedPhotos) {
+            for (Photo photo : photosResponse.photos) {
+                if (photo.serverId == likedPhoto.serverId) {
+                    photo.liked = true;
+                    photo._id = likedPhoto._id;
+                }
+            }
+        }
+    }
+
     private void subscribe() {
         onSubscribing();
         subscription = lastRequest
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<PhotosResponse>() {
-                    @Override
-                    public void onCompleted() {
-                        Timber.d("Completed");
-                        onRequestCompletion();
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        Timber.e(e, "Failed to load photos.");
-                        onRequestCompletion();
-                    }
-
-                    @Override
-                    public void onNext(PhotosResponse photosResponse) {
-                        Timber.d("Responded: %s", photosResponse);
-                        adapter.addPhotos(photosResponse.photos);
-                        maxPage = photosResponse.totalPages;
-                        ++nextPage;
-                    }
-                });
+                .subscribe(new PhotosResponseSubscriber());
     }
 
     private void onSubscribing() {
@@ -206,16 +164,7 @@ public class PopularPhotosFragment extends ListFragment {
                 .map(new Func1<List<Photo>, Boolean>() {
                     @Override
                     public Boolean call(List<Photo> photos) {
-                        for (int i = 0; adapter != null && i < adapter.getCount(); ++i) {
-                            final Photo adapterItem = adapter.getItem(i);
-                            adapterItem.liked = false;
-                            for (Photo dbItem : photos) {
-                                if (dbItem.serverId == adapterItem.serverId) {
-                                    adapterItem.liked = true;
-                                    break;
-                                }
-                            }
-                        }
+                        mergeViewAndDatabaseData(photos);
                         return true;
                     }
                 })
@@ -230,5 +179,69 @@ public class PopularPhotosFragment extends ListFragment {
                     }
                 });
        }
+    }
+
+    private void mergeViewAndDatabaseData(List<Photo> photos) {
+        for (int i = 0; adapter != null && i < adapter.getCount(); ++i) {
+            final Photo adapterItem = adapter.getItem(i);
+            adapterItem.liked = false;
+            for (Photo dbItem : photos) {
+                if (dbItem.serverId == adapterItem.serverId) {
+                    adapterItem.liked = true;
+                    break;
+                }
+            }
+        }
+    }
+
+    private class ActionBarHidingScrollListener extends LoadOnScrollListener {
+
+        boolean barIsVisible = true;
+
+        @Override
+        public void onDataLoadRequest() {
+            if (lastRequest == null && nextPage <= maxPage) {
+                lastRequest = makeRequest();
+                subscribe();
+            }
+        }
+
+        @Override
+        public void onScrollUp() {
+            if (!barIsVisible) {
+                barIsVisible = true;
+                getActivity().getActionBar().show();
+            }
+        }
+
+        @Override
+        public void onScrollDown() {
+            if (barIsVisible) {
+                barIsVisible = false;
+                getActivity().getActionBar().hide();
+            }
+        }
+    }
+
+    private class PhotosResponseSubscriber extends Subscriber<PhotosResponse> {
+        @Override
+        public void onCompleted() {
+            Timber.d("Completed");
+            onRequestCompletion();
+        }
+
+        @Override
+        public void onError(Throwable e) {
+            Timber.e(e, "Failed to load photos.");
+            onRequestCompletion();
+        }
+
+        @Override
+        public void onNext(PhotosResponse photosResponse) {
+            Timber.d("Responded: %s", photosResponse);
+            adapter.addPhotos(photosResponse.photos);
+            maxPage = photosResponse.totalPages;
+            ++nextPage;
+        }
     }
 }

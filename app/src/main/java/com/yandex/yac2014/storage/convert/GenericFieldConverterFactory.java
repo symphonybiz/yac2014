@@ -16,7 +16,7 @@ public class GenericFieldConverterFactory implements FieldConverterFactory {
 
         if (type instanceof ParameterizedType) {
             final ParameterizedType parameterizedType = ParameterizedType.class.cast(type);
-            return new GsonGenericConverter(parameterizedType);
+            return new JsonParametrizedTypeConverter(parameterizedType);
         }
 
         return null;

@@ -29,6 +29,7 @@ public class PhotoSqliteOpenHelper extends SQLiteOpenHelper {
                 .registerFieldConverter(User.class, new JsonConverter<User>(User.class))
                 .registerFieldConverterFactory(new GenericFieldConverterFactory())
                 .build();
+        
         setCupboard(cupboard);
 
         cupboard().register(Photo.class);

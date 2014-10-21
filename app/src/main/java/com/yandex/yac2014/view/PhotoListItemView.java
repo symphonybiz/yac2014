@@ -35,7 +35,7 @@ public class PhotoListItemView extends RelativeLayout {
 
     public PhotoListItemView(Context context) {
         super(context);
-        createView();
+        onCreateView();
     }
 
     public void setPhoto(Photo photo) {
@@ -56,7 +56,7 @@ public class PhotoListItemView extends RelativeLayout {
         liked.setChecked(photo.liked);
     }
 
-    private void createView() {
+    private void onCreateView() {
         LayoutInflater.from(getContext()).inflate(R.layout.view_photo_list_item, this);
         ButterKnife.inject(this);
     }
