@@ -13,8 +13,8 @@ public class YaCApplication extends Application {
 
     @Override
     public void onCreate() {
-        instance = this;
         super.onCreate();
+        instance = this;
         Timber.plant(new Timber.DebugTree());
     }
 }
