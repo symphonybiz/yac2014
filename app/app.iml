@@ -78,7 +78,7 @@
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/symbols" />
       <excludeFolder url="file://$MODULE_DIR$/build/outputs" />
     </content>
-    <orderEntry type="jdk" jdkName="Android API 20 Platform" jdkType="Android SDK" />
+    <orderEntry type="jdk" jdkName="Android API 21 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="okhttp-urlconnection-2.0.0" level="project" />
     <orderEntry type="library" exported="" name="glide-3.3.1" level="project" />
@@ -86,6 +86,7 @@
     <orderEntry type="library" exported="" name="okio-1.0.0" level="project" />
     <orderEntry type="library" exported="" name="timber-2.4.1" level="project" />
     <orderEntry type="library" exported="" name="support-v4-20.0.0" level="project" />
+    <orderEntry type="library" exported="" name="butterknife-6.0.0" level="project" />
     <orderEntry type="library" exported="" name="okhttp-2.0.0" level="project" />
     <orderEntry type="library" exported="" name="cupboard-2.0.1" level="project" />
     <orderEntry type="library" exported="" name="support-annotations-20.0.0" level="project" />
@@ -93,7 +94,6 @@
     <orderEntry type="library" exported="" name="okhttp-integration-1.0.1" level="project" />
     <orderEntry type="library" exported="" name="gson-2.3" level="project" />
     <orderEntry type="library" exported="" name="rxjava-android-0.20.5" level="project" />
-    <orderEntry type="library" exported="" name="butterknife-5.1.2" level="project" />
   </component>
 </module>
 
