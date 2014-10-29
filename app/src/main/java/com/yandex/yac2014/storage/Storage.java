@@ -21,6 +21,53 @@ import static nl.qbusict.cupboard.CupboardFactory.cupboard;
  */
 public class Storage {
 
+    // Simple synchronous methods
+
+    public Long savePhoto(Photo photo) {
+        return dataCompartment.put(photo);
+    }
+
+    public boolean deletePhoto(Photo photo) {
+        return dataCompartment.delete(photo);
+    }
+
+
+    // Observable-based method
+
+    public Observable<Photo> toggleLiked(final Photo photo) {
+        return bindIoToMain(new Func0<Observable<Photo>>() {
+            @Override
+            public Observable<Photo> call() {
+                if (photo.liked) {
+                    photo.liked = false;
+                    deletePhoto(photo);
+                } else {
+                    photo.liked = true;
+                    savePhoto(photo);
+                }
+                return Observable.just(photo);
+            }
+        });
+    }
+
+    public Observable<List<Photo>> photos() {
+        return bindIoToMain(new Func0<Observable<List<Photo>>>() {
+            @Override
+            public Observable<List<Photo>> call() {
+                return Observable.just(dataCompartment.query(Photo.class).list());
+            }
+        });
+    }
+
+    // stuff
+
+    private static <T> Observable<T> bindIoToMain(Func0<Observable<T>> func) {
+        return Observable
+                .defer(func)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
     PhotoSqliteOpenHelper openHelper;
     SQLiteDatabase database;
     DatabaseCompartment dataCompartment;
@@ -43,50 +90,5 @@ public class Storage {
             }
         }
         return instance;
-    }
-
-    // Simple synchronous methods
-
-    public Long savePhoto(Photo photo) {
-        return dataCompartment.put(photo);
-    }
-
-    public boolean deletePhoto(Photo photo) {
-        return dataCompartment.delete(photo);
-    }
-
-
-    // Observable-based method
-
-    public Observable<Photo> toggleLiked(final Photo photo) {
-        return wrapIoToMainObservable(new Func0<Observable<Photo>>() {
-            @Override
-            public Observable<Photo> call() {
-                if (photo.liked) {
-                    photo.liked = false;
-                    deletePhoto(photo);
-                } else {
-                    photo.liked = true;
-                    savePhoto(photo);
-                }
-                return Observable.just(photo);
-            }
-        });
-    }
-
-    public Observable<List<Photo>> photos() {
-        return wrapIoToMainObservable(new Func0<Observable<List<Photo>>>() {
-            @Override
-            public Observable<List<Photo>> call() {
-                return Observable.just(dataCompartment.query(Photo.class).list());
-            }
-        });
-    }
-
-    private static <T> Observable<T> wrapIoToMainObservable(Func0<Observable<T>> func) {
-        return Observable
-                .defer(func)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
     }
 }
