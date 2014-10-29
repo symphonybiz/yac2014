@@ -25,12 +25,12 @@ public class PhotoSqliteOpenHelper extends SQLiteOpenHelper {
     private final static int DB_VERSION = 11;
 
     static {
-        final Cupboard cupboard = new CupboardBuilder()
+        setCupboard(
+                new CupboardBuilder()
                 .registerFieldConverter(User.class, new JsonConverter<User>(User.class))
                 .registerFieldConverterFactory(new GenericFieldConverterFactory())
-                .build();
-        
-        setCupboard(cupboard);
+                .build()
+        );
 
         cupboard().register(Photo.class);
     }

@@ -1,17 +1,16 @@
 package com.yandex.yac2014;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 
 
 public class LikedPhotosActivity extends Activity {
 
-    public static void start(Activity caller) {
-        Intent i = new Intent(caller, LikedPhotosActivity.class);
-        caller.startActivity(i);
+    public static void start(Context context) {
+        Intent i = new Intent(context, LikedPhotosActivity.class);
+        context.startActivity(i);
     }
 
     @Override

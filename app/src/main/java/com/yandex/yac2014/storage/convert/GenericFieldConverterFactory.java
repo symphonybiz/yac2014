@@ -15,7 +15,7 @@ public class GenericFieldConverterFactory implements FieldConverterFactory {
     public FieldConverter<?> create(Cupboard cupboard, Type type) {
 
         if (type instanceof ParameterizedType) {
-            final ParameterizedType parameterizedType = ParameterizedType.class.cast(type);
+            final ParameterizedType parameterizedType = (ParameterizedType)type;
             return new JsonParametrizedTypeConverter(parameterizedType);
         }
 

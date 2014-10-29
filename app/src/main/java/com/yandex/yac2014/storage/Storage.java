@@ -10,9 +10,11 @@ import java.util.List;
 
 import nl.qbusict.cupboard.DatabaseCompartment;
 import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func0;
+import rx.schedulers.Schedulers;
 
-import static nl.qbusict.cupboard.CupboardFactory.*;
+import static nl.qbusict.cupboard.CupboardFactory.cupboard;
 
 /**
  * Created by 7times6 on 17.10.14.
@@ -43,6 +45,8 @@ public class Storage {
         return instance;
     }
 
+    // Simple synchronous methods
+
     public Long savePhoto(Photo photo) {
         return dataCompartment.put(photo);
     }
@@ -51,12 +55,38 @@ public class Storage {
         return dataCompartment.delete(photo);
     }
 
+
+    // Observable-based method
+
+    public Observable<Photo> toggleLiked(final Photo photo) {
+        return wrapIoToMainObservable(new Func0<Observable<Photo>>() {
+            @Override
+            public Observable<Photo> call() {
+                if (photo.liked) {
+                    photo.liked = false;
+                    deletePhoto(photo);
+                } else {
+                    photo.liked = true;
+                    savePhoto(photo);
+                }
+                return Observable.just(photo);
+            }
+        });
+    }
+
     public Observable<List<Photo>> photos() {
-        return Observable.defer(new Func0<Observable<List<Photo>>>() {
+        return wrapIoToMainObservable(new Func0<Observable<List<Photo>>>() {
             @Override
             public Observable<List<Photo>> call() {
                 return Observable.just(dataCompartment.query(Photo.class).list());
             }
         });
+    }
+
+    private static <T> Observable<T> wrapIoToMainObservable(Func0<Observable<T>> func) {
+        return Observable
+                .defer(func)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 }

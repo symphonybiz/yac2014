@@ -11,11 +11,13 @@ import rx.Observable;
  */
 public interface Api500px {
 
-    @GET("/photos?image_size=4")
+    @GET("/photos")
     Observable<PhotosResponse> photos(
             @Query("consumer_key") String key,
             @Query("feature")      String feature,
-            @Query("page") Integer page
+            @Query("page") Integer page,
+            @Query("image_size") Integer imageSize
     );
+
 
 }

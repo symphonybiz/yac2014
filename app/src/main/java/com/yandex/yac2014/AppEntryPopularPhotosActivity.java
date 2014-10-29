@@ -8,8 +8,6 @@ import android.view.MenuItem;
 
 public class AppEntryPopularPhotosActivity extends Activity {
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -21,7 +19,6 @@ public class AppEntryPopularPhotosActivity extends Activity {
                     .commit();
         }
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

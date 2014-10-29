@@ -134,16 +134,16 @@ public class PopularPhotosFragment extends ListFragment {
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
 
-        final Photo item = adapter.getItem(position);
-        item.liked = !item.liked;
-        adapter.notifyDataSetChanged();
+        final Photo photo = adapter.getItem(position);
 
-        final Storage storage = Storage.get();
-        if (item.liked) {
-            storage.savePhoto(item);
-        } else {
-            storage.deletePhoto(item);
-        }
+        Storage.get()
+                .toggleLiked(photo)
+                .subscribe(new Action1<Photo>() {
+                    @Override
+                    public void call(Photo photo) {
+                        adapter.notifyDataSetChanged();
+                    }
+                });
     }
 
     @Override

@@ -14,6 +14,7 @@ import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 import timber.log.Timber;
 
@@ -91,13 +92,15 @@ public class LikedPhotosFragment extends ListFragment {
 
         final Photo photo = adapter.getItem(position);
 
-        if (photo.liked) {
-            Storage.get().deletePhoto(photo);
-        } else {
-            Storage.get().savePhoto(photo);
-        }
-        photo.liked = !photo.liked;
-        adapter.notifyDataSetChanged();
+        Storage.get()
+                .toggleLiked(photo)
+                .subscribe(new Action1<Photo>() {
+                    @Override
+                    public void call(Photo photo) {
+                        adapter.notifyDataSetChanged();
+
+                    }
+                });
     }
 
     @Override

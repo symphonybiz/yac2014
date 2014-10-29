@@ -21,11 +21,7 @@ public class Api500pxFacade {
                 .create(Api500px.class);
     }
 
-    public Observable<PhotosResponse> popularPhotos() {
-        return api.photos(Const500px.CONSUMER_KEY, Const500px.FEATURE_POPULAR, null);
-    }
-
     public Observable<PhotosResponse> popularPhotos(int page) {
-        return api.photos(Const500px.CONSUMER_KEY, Const500px.FEATURE_POPULAR, page);
+        return api.photos(Const500px.CONSUMER_KEY, Const500px.FEATURE_POPULAR, page, Const500px.MAX_IMAGE_SIZE);
     }
 }
