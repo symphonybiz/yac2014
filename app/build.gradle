@@ -1,8 +1,15 @@
+buildscript {
+    dependencies {
+        classpath 'com.android.tools.build:gradle:1.0.+'
+    }
+}
+
 apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 21
-    buildToolsVersion "21.0.2"
+    buildToolsVersion "21.1.1"
+
 
     defaultConfig {
         applicationId "com.yandex.yac2014"
@@ -13,7 +20,7 @@ android {
     }
     buildTypes {
         release {
-            runProguard true
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -25,15 +32,11 @@ dependencies {
     compile 'com.squareup.okhttp:okhttp:2.0.0'
     compile 'com.squareup.okhttp:okhttp-urlconnection:2.0.0'
     compile 'com.netflix.rxjava:rxjava-android:0.20.5'
-
     compile 'com.jakewharton:butterknife:6.0.0'
-
     compile 'com.github.bumptech.glide:glide:3.3.1'
     compile 'com.github.bumptech.glide:okhttp-integration:1.0.+'
-
     compile 'com.jakewharton.timber:timber:2.4.1'
-
     compile 'nl.qbusict:cupboard:2.0.1'
-
-    compile 'com.android.support:support-v4:20.+'
+    compile 'com.android.support:support-v4:21.+'
+    compile 'com.android.support:appcompat-v7:21.+'
 }

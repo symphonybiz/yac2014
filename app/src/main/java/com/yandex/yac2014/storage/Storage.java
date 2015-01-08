@@ -59,8 +59,6 @@ public class Storage {
         });
     }
 
-    // stuff
-
     private static <T> Observable<T> bindIoToMain(Func0<Observable<T>> func) {
         return Observable
                 .defer(func)

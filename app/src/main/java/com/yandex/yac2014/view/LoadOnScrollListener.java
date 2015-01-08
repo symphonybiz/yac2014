@@ -30,8 +30,8 @@ public abstract class LoadOnScrollListener implements AbsListView.OnScrollListen
         boolean bottomVisible = currentFirstVisibleItem + currentVisibleItemCount == totalItemCount;
         if (bottomVisible
                 && currentVisibleItemCount > 0
-                && currentScrollState == SCROLL_STATE_IDLE)
-        {
+                && currentScrollState == SCROLL_STATE_IDLE
+        ) {
             onDataLoadRequest();
         }
     }
