@@ -15,6 +15,7 @@
 package com.yandex.yac2014.tv;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.yandex.yac2014.R;
@@ -31,5 +32,7 @@ public class MainTvActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_tv);
+        Intent recommendationIntent = new Intent(this, UpdateRecommendationsService.class);
+        startService(recommendationIntent);
     }
 }
