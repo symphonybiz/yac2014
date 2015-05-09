@@ -24,25 +24,27 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bumptech.glide.Glide;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 import com.yandex.yac2014.R;
+import com.yandex.yac2014.model.Photo;
 
 import java.net.URI;
 
 /*
- * A CardPresenter is used to generate Views and bind Objects to them on demand. 
+ * A PhotoPresenter is used to generate Views and bind Objects to them on demand.
  * It contains an Image CardView
  */
-public class CardPresenter extends Presenter {
-    private static final String TAG = "CardPresenter";
+public class PhotoPresenter extends Presenter {
+    private static final String TAG = "PhotoPresenter";
 
     private static Context mContext;
     private static int CARD_WIDTH = 313;
     private static int CARD_HEIGHT = 176;
 
     static class ViewHolder extends Presenter.ViewHolder {
-        private Movie mMovie;
+        private Photo mPhoto;
         private ImageCardView mCardView;
         private Drawable mDefaultCardImage;
         private PicassoImageCardViewTarget mImageCardViewTarget;
@@ -54,13 +56,6 @@ public class CardPresenter extends Presenter {
             mDefaultCardImage = mContext.getResources().getDrawable(R.drawable.movie);
         }
 
-        public void setMovie(Movie m) {
-            mMovie = m;
-        }
-
-        public Movie getMovie() {
-            return mMovie;
-        }
 
         public ImageCardView getCardView() {
             return mCardView;
@@ -73,6 +68,14 @@ public class CardPresenter extends Presenter {
                             Utils.convertDpToPixel(mContext, CARD_HEIGHT))
                     .error(mDefaultCardImage)
                     .into(mImageCardViewTarget);
+        }
+
+        public Photo getPhoto() {
+            return mPhoto;
+        }
+
+        public void setPhoto(Photo photo) {
+            this.mPhoto = photo;
         }
     }
 
@@ -90,16 +93,32 @@ public class CardPresenter extends Presenter {
 
     @Override
     public void onBindViewHolder(Presenter.ViewHolder viewHolder, Object item) {
-        Movie movie = (Movie) item;
-        ((ViewHolder) viewHolder).setMovie(movie);
+        Photo photo = (Photo) item;
+        ((ViewHolder) viewHolder).setPhoto(photo);
 
         Log.d(TAG, "onBindViewHolder");
-        if (movie.getCardImageUrl() != null) {
-            ((ViewHolder) viewHolder).mCardView.setTitleText(movie.getTitle());
-            ((ViewHolder) viewHolder).mCardView.setContentText(movie.getStudio());
+        final String url = photo.images.get(0).url;
+        if (url != null) {
+            ((ViewHolder) viewHolder).mCardView.setTitleText(photo.name);
+            ((ViewHolder) viewHolder).mCardView.setContentText(photo.user.fullname);
             ((ViewHolder) viewHolder).mCardView.setMainImageDimensions(CARD_WIDTH, CARD_HEIGHT);
-            ((ViewHolder) viewHolder).updateCardViewImage(movie.getCardImageURI());
+            ((ViewHolder) viewHolder).updateCardViewImage(URI.create(url));
         }
+
+//        if (this.photo != photo) {
+//            // not already loaded
+//            final String url = photo.images.get(0).url;
+//            Glide.with(getContext())
+//                    .load(url)
+//                    .crossFade()
+//                    .into(image);
+//        }
+//
+//        this.photo = photo;
+//
+//        textName.setText(photo.name);
+//        textUser.setText(photo.user.fullname);
+//        liked.setChecked(photo.liked);
     }
 
     @Override

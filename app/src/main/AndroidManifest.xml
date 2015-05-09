@@ -34,6 +34,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
+            android:theme="@style/Theme.Leanback"
             android:name=".tv.MainTvActivity"
             android:icon="@drawable/app_icon_your_company"
             android:label="@string/title_activity_main_tv"

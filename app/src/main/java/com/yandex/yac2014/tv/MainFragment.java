@@ -49,6 +49,13 @@ import android.widget.Toast;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 import com.yandex.yac2014.R;
+import com.yandex.yac2014.api.Api500pxFacade;
+import com.yandex.yac2014.api.response.PhotosResponse;
+import com.yandex.yac2014.model.Photo;
+
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.schedulers.Schedulers;
 
 public class MainFragment extends BrowseFragment {
     private static final String TAG = "MainFragment";
@@ -56,7 +63,7 @@ public class MainFragment extends BrowseFragment {
     private static final int BACKGROUND_UPDATE_DELAY = 300;
     private static final int GRID_ITEM_WIDTH = 200;
     private static final int GRID_ITEM_HEIGHT = 200;
-    private static final int NUM_ROWS = 6;
+    private static final int NUM_ROWS = StreamList.STREAM_FEATURE.length;
     private static final int NUM_COLS = 15;
 
     private ArrayObjectAdapter mRowsAdapter;
@@ -66,8 +73,9 @@ public class MainFragment extends BrowseFragment {
     private Timer mBackgroundTimer;
     private final Handler mHandler = new Handler();
     private URI mBackgroundURI;
-    Movie mMovie;
-    CardPresenter mCardPresenter;
+    PhotoPresenter mPhotoPresenter;
+
+    private final Api500pxFacade mApi = new Api500pxFacade();
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -93,35 +101,34 @@ public class MainFragment extends BrowseFragment {
     }
 
     private void loadRows() {
-        List<Movie> list = MovieList.setupMovies();
+        mApi.popularPhotos(0)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<PhotosResponse>() {
+                    @Override
+                    public void call(PhotosResponse photosResponse) {
 
-        mRowsAdapter = new ArrayObjectAdapter(new ListRowPresenter());
-        mCardPresenter = new CardPresenter();
+                        List<Photo> list = photosResponse.photos;
 
-        int i;
-        for (i = 0; i < NUM_ROWS; i++) {
-            if (i != 0) {
-                Collections.shuffle(list);
-            }
-            ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(mCardPresenter);
-            for (int j = 0; j < NUM_COLS; j++) {
-                listRowAdapter.add(list.get(j % 5));
-            }
-            HeaderItem header = new HeaderItem(i, MovieList.MOVIE_CATEGORY[i]);
-            mRowsAdapter.add(new ListRow(header, listRowAdapter));
-        }
+                        mRowsAdapter = new ArrayObjectAdapter(new ListRowPresenter());
+                        mPhotoPresenter = new PhotoPresenter();
 
-        HeaderItem gridHeader = new HeaderItem(i, "PREFERENCES");
+                        int i;
+                        for (i = 0; i < NUM_ROWS; i++) {
+                            if (i != 0) {
+                                Collections.shuffle(list);
+                            }
+                            ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(mPhotoPresenter);
+                            for (int j = 0; j < NUM_COLS; j++) {
+                                listRowAdapter.add(list.get(j % 5));
+                            }
+                            HeaderItem header = new HeaderItem(i, StreamList.STREAM_FEATURE[i]);
+                            mRowsAdapter.add(new ListRow(header, listRowAdapter));
+                        }
 
-        GridItemPresenter mGridPresenter = new GridItemPresenter();
-        ArrayObjectAdapter gridRowAdapter = new ArrayObjectAdapter(mGridPresenter);
-        gridRowAdapter.add(getResources().getString(R.string.grid_view));
-        gridRowAdapter.add(getString(R.string.error_fragment));
-        gridRowAdapter.add(getResources().getString(R.string.personal_settings));
-        mRowsAdapter.add(new ListRow(gridHeader, gridRowAdapter));
-
-        setAdapter(mRowsAdapter);
-
+                        setAdapter(mRowsAdapter);
+                    }
+                });
     }
 
     private void prepareBackgroundManager() {
@@ -169,26 +176,26 @@ public class MainFragment extends BrowseFragment {
         public void onItemClicked(Presenter.ViewHolder itemViewHolder, Object item,
                                   RowPresenter.ViewHolder rowViewHolder, Row row) {
 
-            if (item instanceof Movie) {
-                Movie movie = (Movie) item;
-                Log.d(TAG, "Item: " + item.toString());
-                Intent intent = new Intent(getActivity(), DetailsActivity.class);
-                intent.putExtra(DetailsActivity.MOVIE, movie);
-
-                Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                        getActivity(),
-                        ((ImageCardView) itemViewHolder.view).getMainImageView(),
-                        DetailsActivity.SHARED_ELEMENT_NAME).toBundle();
-                getActivity().startActivity(intent, bundle);
-            } else if (item instanceof String) {
-                if (((String) item).indexOf(getString(R.string.error_fragment)) >= 0) {
-                    Intent intent = new Intent(getActivity(), BrowseErrorActivity.class);
-                    startActivity(intent);
-                } else {
-                    Toast.makeText(getActivity(), ((String) item), Toast.LENGTH_SHORT)
-                            .show();
-                }
-            }
+//            if (item instanceof Movie) {
+//                Movie movie = (Movie) item;
+//                Log.d(TAG, "Item: " + item.toString());
+//                Intent intent = new Intent(getActivity(), DetailsActivity.class);
+//                intent.putExtra(DetailsActivity.MOVIE, movie);
+//
+//                Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
+//                        getActivity(),
+//                        ((ImageCardView) itemViewHolder.view).getMainImageView(),
+//                        DetailsActivity.SHARED_ELEMENT_NAME).toBundle();
+//                getActivity().startActivity(intent, bundle);
+//            } else if (item instanceof String) {
+//                if (((String) item).indexOf(getString(R.string.error_fragment)) >= 0) {
+//                    Intent intent = new Intent(getActivity(), BrowseErrorActivity.class);
+//                    startActivity(intent);
+//                } else {
+//                    Toast.makeText(getActivity(), ((String) item), Toast.LENGTH_SHORT)
+//                            .show();
+//                }
+//            }
         }
     }
 
@@ -196,10 +203,10 @@ public class MainFragment extends BrowseFragment {
         @Override
         public void onItemSelected(Presenter.ViewHolder itemViewHolder, Object item,
                                    RowPresenter.ViewHolder rowViewHolder, Row row) {
-            if (item instanceof Movie) {
-                mBackgroundURI = ((Movie) item).getBackgroundImageURI();
-                startBackgroundTimer();
-            }
+//            if (item instanceof Movie) {
+//                mBackgroundURI = ((Movie) item).getBackgroundImageURI();
+//                startBackgroundTimer();
+//            }
 
         }
     }
