@@ -9,7 +9,6 @@ import com.yandex.yac2014.model.User;
 import com.yandex.yac2014.storage.convert.GenericFieldConverterFactory;
 import com.yandex.yac2014.storage.convert.JsonConverter;
 
-import nl.qbusict.cupboard.Cupboard;
 import nl.qbusict.cupboard.CupboardBuilder;
 
 import static nl.qbusict.cupboard.CupboardFactory.cupboard;

@@ -3,9 +3,7 @@ package com.yandex.yac2014.api;
 import com.yandex.yac2014.api.response.PhotosResponse;
 
 import retrofit.RestAdapter;
-import rx.Notification;
 import rx.Observable;
-import rx.functions.Action1;
 
 /**
  * Created by 7times6 on 17.10.14.

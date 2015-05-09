@@ -3,7 +3,6 @@ package com.yandex.yac2014.tv;
 import com.yandex.yac2014.api.Api500pxFacade;
 import com.yandex.yac2014.api.response.PhotosResponse;
 
-
 import rx.Observable;
 
 public final class StreamList {
