@@ -31,6 +31,10 @@ public class Photo {
     @SerializedName("images")
     public ArrayList<Image> images;
 
+    public String getFirstImageUri() {
+        return images.get(0).url;
+    }
+
     @Override
     public String toString() {
         return "Photo{" +

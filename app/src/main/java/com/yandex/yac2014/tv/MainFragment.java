@@ -64,7 +64,6 @@ public class MainFragment extends BrowseFragment {
     private static final int GRID_ITEM_WIDTH = 200;
     private static final int GRID_ITEM_HEIGHT = 200;
     private static final int NUM_ROWS = StreamList.STREAM_FEATURE.length;
-    private static final int NUM_COLS = 15;
 
     private ArrayObjectAdapter mRowsAdapter;
     private Drawable mDefaultBackground;
@@ -115,12 +114,9 @@ public class MainFragment extends BrowseFragment {
 
                         int i;
                         for (i = 0; i < NUM_ROWS; i++) {
-                            if (i != 0) {
-                                Collections.shuffle(list);
-                            }
                             ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(mPhotoPresenter);
-                            for (int j = 0; j < NUM_COLS; j++) {
-                                listRowAdapter.add(list.get(j % 5));
+                            for (int j = 0; j < list.size(); j++) {
+                                listRowAdapter.add(list.get(j));
                             }
                             HeaderItem header = new HeaderItem(i, StreamList.STREAM_FEATURE[i]);
                             mRowsAdapter.add(new ListRow(header, listRowAdapter));
@@ -152,7 +148,7 @@ public class MainFragment extends BrowseFragment {
         setHeadersTransitionOnBackEnabled(true);
 
         // set fastLane (or headers) background color
-        setBrandColor(getResources().getColor(R.color.fastlane_background));
+        setBrandColor(getResources().getColor(R.color.black));
         // set search icon color
         setSearchAffordanceColor(getResources().getColor(R.color.search_opaque));
     }
@@ -203,10 +199,10 @@ public class MainFragment extends BrowseFragment {
         @Override
         public void onItemSelected(Presenter.ViewHolder itemViewHolder, Object item,
                                    RowPresenter.ViewHolder rowViewHolder, Row row) {
-//            if (item instanceof Movie) {
-//                mBackgroundURI = ((Movie) item).getBackgroundImageURI();
-//                startBackgroundTimer();
-//            }
+            if (item instanceof Photo) {
+                mBackgroundURI = URI.create(((Photo) item).getFirstImageUri());
+                startBackgroundTimer();
+            }
 
         }
     }

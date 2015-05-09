@@ -67,6 +67,7 @@ public class PhotoPresenter extends Presenter {
                     .resize(Utils.convertDpToPixel(mContext, CARD_WIDTH),
                             Utils.convertDpToPixel(mContext, CARD_HEIGHT))
                     .error(mDefaultCardImage)
+                    .centerCrop()
                     .into(mImageCardViewTarget);
         }
 
