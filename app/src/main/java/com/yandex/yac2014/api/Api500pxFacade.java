@@ -28,4 +28,12 @@ public class Api500pxFacade {
     public Observable<PhotosResponse> highestRatedPhotos(int page) {
         return api.photos(Const500px.CONSUMER_KEY, Const500px.FEATURE_HIGHEST_RATED, page, Const500px.MAX_IMAGE_SIZE);
     }
+
+    public Observable<PhotosResponse> upcoming(int page) {
+        return api.photos(Const500px.CONSUMER_KEY, Const500px.FEATURE_UPCOMING, page, Const500px.MAX_IMAGE_SIZE);
+    }
+
+    public Observable<PhotosResponse> freshToday(int page) {
+        return api.photos(Const500px.CONSUMER_KEY, Const500px.FEATURE_FRESH_TODAY, page, Const500px.MAX_IMAGE_SIZE);
+    }
 }

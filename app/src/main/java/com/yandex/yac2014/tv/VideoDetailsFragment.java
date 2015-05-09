@@ -55,7 +55,7 @@ public class VideoDetailsFragment extends DetailsFragment {
 //        mMetrics = new DisplayMetrics();
 //        getActivity().getWindowManager().getDefaultDisplay().getMetrics(mMetrics);
 //
-//        mPhoto = (Movie) getActivity().getIntent().getSerializableExtra(MOVIE);
+//        mPhoto = (Movie) getActivity().getIntent().getSerializableExtra(PHOTO);
 //        mDetailRowBuilderTask = (DetailRowBuilderTask) new DetailRowBuilderTask().execute(mPhoto);
 //        mDorPresenter.setSharedElementEnterTransition(getActivity(),
 //                DetailsActivity.SHARED_ELEMENT_NAME);
@@ -79,7 +79,7 @@ public class VideoDetailsFragment extends DetailsFragment {
 //                Movie movie = (Movie) item;
 //                Log.d(TAG, "Item: " + item.toString());
 //                Intent intent = new Intent(getActivity(), DetailsActivity.class);
-//                intent.putExtra(DetailsActivity.MOVIE, movie);
+//                intent.putExtra(DetailsActivity.PHOTO, movie);
 //
 //                Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
 //                        getActivity(),

@@ -45,7 +45,10 @@
                 <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".tv.DetailsActivity" />
+
+        <activity
+            android:theme="@style/Theme.Leanback"
+            android:name=".tv.DetailsActivity" />
 
     </application>
 

@@ -1,6 +1,7 @@
 package com.yandex.yac2014.view;
 
 import android.content.Context;
+import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.CheckBox;
 import android.widget.ImageView;
@@ -35,6 +36,11 @@ public class PhotoListItemView extends RelativeLayout {
 
     public PhotoListItemView(Context context) {
         super(context);
+        onCreateView();
+    }
+
+    public PhotoListItemView(Context context, AttributeSet attrs) {
+        super(context, attrs);
         onCreateView();
     }
 

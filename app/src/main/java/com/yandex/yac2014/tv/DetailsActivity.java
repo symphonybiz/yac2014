@@ -16,15 +16,28 @@ package com.yandex.yac2014.tv;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.widget.ImageView;
 
+import com.squareup.picasso.Picasso;
 import com.yandex.yac2014.R;
+import com.yandex.yac2014.model.Photo;
+import com.yandex.yac2014.view.PhotoListItemView;
+
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 
 /*
  * Details activity class that loads LeanbackDetailsFragment class
  */
 public class DetailsActivity extends Activity {
+
     public static final String SHARED_ELEMENT_NAME = "hero";
-    public static final String MOVIE = "Movie";
+    public static final String PHOTO = "photo";
+
+    @InjectView(R.id.image)
+    ImageView mImageView;
+
+    private Photo mPhoto;
 
     /**
      * Called when the activity is first created.
@@ -33,6 +46,14 @@ public class DetailsActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
+        ButterKnife.inject(this);
+        mPhoto = (Photo) getIntent().getSerializableExtra(PHOTO);
+
+        //
+        Picasso.with(this)
+                .load(mPhoto.getFirstImageUri())
+                .into(mImageView);
+
     }
 
 }

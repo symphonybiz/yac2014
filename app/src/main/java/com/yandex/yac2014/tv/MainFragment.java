@@ -15,7 +15,6 @@
 package com.yandex.yac2014.tv;
 
 import java.net.URI;
-import java.util.Collections;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -100,31 +99,32 @@ public class MainFragment extends BrowseFragment {
     }
 
     private void loadRows() {
-        mApi.popularPhotos(0)
-                .subscribeOn(Schedulers.io())
+
+
+        mRowsAdapter = new ArrayObjectAdapter(new ListRowPresenter());
+        mPhotoPresenter = new PhotoPresenter();
+        for (int i = 0; i < NUM_ROWS; i++) {
+            final StreamList.StreamItem streamItem = StreamList.STREAM_FEATURE[i];
+
+            final int id = i;
+            streamItem.getSubscription()
+            .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action1<PhotosResponse>() {
                     @Override
                     public void call(PhotosResponse photosResponse) {
-
                         List<Photo> list = photosResponse.photos;
 
-                        mRowsAdapter = new ArrayObjectAdapter(new ListRowPresenter());
-                        mPhotoPresenter = new PhotoPresenter();
-
-                        int i;
-                        for (i = 0; i < NUM_ROWS; i++) {
-                            ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(mPhotoPresenter);
-                            for (int j = 0; j < list.size(); j++) {
-                                listRowAdapter.add(list.get(j));
-                            }
-                            HeaderItem header = new HeaderItem(i, StreamList.STREAM_FEATURE[i]);
-                            mRowsAdapter.add(new ListRow(header, listRowAdapter));
+                        ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(mPhotoPresenter);
+                        for (int j = 0; j < list.size(); j++) {
+                            listRowAdapter.add(list.get(j));
                         }
-
-                        setAdapter(mRowsAdapter);
+                        HeaderItem header = new HeaderItem(id, streamItem.getName());
+                        mRowsAdapter.add(new ListRow(header, listRowAdapter));
                     }
-                });
+            });
+        }
+        setAdapter(mRowsAdapter);
     }
 
     private void prepareBackgroundManager() {
@@ -172,26 +172,21 @@ public class MainFragment extends BrowseFragment {
         public void onItemClicked(Presenter.ViewHolder itemViewHolder, Object item,
                                   RowPresenter.ViewHolder rowViewHolder, Row row) {
 
-//            if (item instanceof Movie) {
-//                Movie movie = (Movie) item;
-//                Log.d(TAG, "Item: " + item.toString());
-//                Intent intent = new Intent(getActivity(), DetailsActivity.class);
-//                intent.putExtra(DetailsActivity.MOVIE, movie);
-//
-//                Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
-//                        getActivity(),
-//                        ((ImageCardView) itemViewHolder.view).getMainImageView(),
-//                        DetailsActivity.SHARED_ELEMENT_NAME).toBundle();
-//                getActivity().startActivity(intent, bundle);
-//            } else if (item instanceof String) {
-//                if (((String) item).indexOf(getString(R.string.error_fragment)) >= 0) {
-//                    Intent intent = new Intent(getActivity(), BrowseErrorActivity.class);
-//                    startActivity(intent);
-//                } else {
-//                    Toast.makeText(getActivity(), ((String) item), Toast.LENGTH_SHORT)
-//                            .show();
-//                }
-//            }
+            if (item instanceof Photo) {
+                Photo photo = (Photo) item;
+                Log.d(TAG, "Item: " + item.toString());
+                Intent intent = new Intent(getActivity(), DetailsActivity.class);
+                intent.putExtra(DetailsActivity.PHOTO, photo);
+
+                Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation
+                        (
+                            getActivity(),
+                            ((ImageCardView) itemViewHolder.view).getMainImageView(),
+                            DetailsActivity.SHARED_ELEMENT_NAME
+                        ).toBundle();
+
+                getActivity().startActivity(intent, bundle);
+            }
         }
     }
 

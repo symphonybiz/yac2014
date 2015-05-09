@@ -8,5 +8,7 @@ public interface Const500px {
     String CONSUMER_KEY = "Sh0tPT4HVjrqznL4DnSBjkha0em68qY5WRXueFNH";
     String FEATURE_POPULAR = "popular";
     String FEATURE_HIGHEST_RATED = "highest_rated";
+    String FEATURE_UPCOMING = "upcoming";
+    String FEATURE_FRESH_TODAY = "fresh_today";
     int MAX_IMAGE_SIZE = 4;
 }
