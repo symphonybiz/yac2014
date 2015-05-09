@@ -19,5 +19,10 @@ public interface Api500px {
             @Query("image_size") Integer imageSize
     );
 
-
+    @GET("/photos/search?sort=_score")
+    Observable<PhotosResponse> search(
+            @Query("consumer_key") String key,
+            @Query("image_size") Integer imageSize,
+            @Query("term") String term
+    );
 }

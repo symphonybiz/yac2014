@@ -47,4 +47,6 @@
     <string name="dismiss_error">Dismiss</string>
     <string name="oops">Oops</string>
     <string name="title_activity_main_tv">The TV thing</string>
+    <string name="title_activity_search">SearchActivity</string>
+    <string name="action_settings">Settings</string>
 </resources>
