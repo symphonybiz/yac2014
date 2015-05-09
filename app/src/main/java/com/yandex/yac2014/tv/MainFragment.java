@@ -14,13 +14,7 @@
 
 package com.yandex.yac2014.tv;
 
-import java.net.URI;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
-
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -31,6 +25,7 @@ import android.support.v17.leanback.widget.HeaderItem;
 import android.support.v17.leanback.widget.ImageCardView;
 import android.support.v17.leanback.widget.ListRow;
 import android.support.v17.leanback.widget.ListRowPresenter;
+import android.support.v17.leanback.widget.ObjectAdapter;
 import android.support.v17.leanback.widget.OnItemViewClickedListener;
 import android.support.v17.leanback.widget.OnItemViewSelectedListener;
 import android.support.v17.leanback.widget.Presenter;
@@ -39,18 +34,19 @@ import android.support.v17.leanback.widget.RowPresenter;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 import com.yandex.yac2014.R;
-import com.yandex.yac2014.api.Api500pxFacade;
 import com.yandex.yac2014.api.response.PhotosResponse;
 import com.yandex.yac2014.model.Photo;
+
+import java.io.Serializable;
+import java.net.URI;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
@@ -96,9 +92,18 @@ public class MainFragment extends BrowseFragment {
         }
     }
 
+
+    class PhotoRow extends ListRow {
+
+        final List<Photo> photos;
+
+        public PhotoRow(HeaderItem header, ObjectAdapter adapter, List<Photo> photos) {
+            super(header, adapter);
+            this.photos = photos;
+        }
+    }
+
     private void loadRows() {
-
-
         mRowsAdapter = new ArrayObjectAdapter(new ListRowPresenter());
         mPhotoPresenter = new PhotoPresenter();
         for (int i = 0; i < NUM_ROWS; i++) {
@@ -118,7 +123,8 @@ public class MainFragment extends BrowseFragment {
                             listRowAdapter.add(list.get(j));
                         }
                         HeaderItem header = new HeaderItem(id, streamItem.getName());
-                        mRowsAdapter.add(new ListRow(header, listRowAdapter));
+                        ListRow row = new PhotoRow(header, listRowAdapter, list);
+                        mRowsAdapter.add(row);
                     }
             });
         }
@@ -175,7 +181,11 @@ public class MainFragment extends BrowseFragment {
                 Photo photo = (Photo) item;
                 Log.d(TAG, "Item: " + item.toString());
                 Intent intent = new Intent(getActivity(), DetailsActivity.class);
-                intent.putExtra(DetailsActivity.PHOTO, photo);
+
+
+                PhotoRow photoRow = (PhotoRow) row;
+                intent.putExtra(DetailsActivity.PHOTO_LIST, (Serializable) photoRow.photos);
+                intent.putExtra(DetailsActivity.PHOTO_LIST_POSITION, photoRow.photos.indexOf(item));
 
                 Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation
                         (
